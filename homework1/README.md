@@ -45,4 +45,4 @@ if __name__ == "__main__":
 
 ## 2. 不使用for的双线性插值
 
-本人才疏学浅，只能实现普通的双线性插值，详情见[博客](https://github.com/3017218062/Image-Super-Resolution/tree/master/interpolation)。
+普通的双线性插值，详情见[博客](https://github.com/3017218062/Image-Super-Resolution/tree/master/interpolation)。
