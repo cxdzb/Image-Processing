@@ -22,5 +22,22 @@ def generateFigure(shape=(256, 256), thickness=1):
     img.save(r"./result/homework1_1.jpg")
 
 
+from matplotlib import pyplot as plt
+
+
+def generateFigure2():
+    X = np.arange(0, 2 * np.pi, 0.001)
+    Y1, Y2, Y3 = np.sin(X), np.cos(X), X ** 2
+    plt.plot(X, Y1, 'r', label="y=sinx")
+    plt.plot(X, Y2, 'g', label="y=cosx")
+    plt.plot(X, Y3, 'b', label="y=x^2")
+    plt.xlabel("X")
+    plt.ylabel("Y")
+    plt.legend()
+    plt.savefig(r"./result/homework1_2.jpg")
+    plt.show()
+
+
 if __name__ == "__main__":
-    generateFigure(shape=(4096, 2048), thickness=41)
+    # generateFigure(shape=(4096, 2048), thickness=41)
+    generateFigure2()
