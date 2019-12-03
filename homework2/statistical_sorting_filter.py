@@ -57,9 +57,9 @@ def modifiedAlphaMeanFilter(image, m=3, n=3, d=2):
 
 
 if __name__ == "__main__":
-    oldImage = Image.open("./test.png")
+    oldImage = Image.open("./lena1.png")
     oldImage.show()
     oldImage = np.asarray(oldImage)
-    newImage = modifiedAlphaMeanFilter(oldImage, 5, 5)
+    newImage = modifiedAlphaMeanFilter(oldImage, 3, 3, 6)
     newImage = Image.fromarray(newImage.astype("int"))
     newImage.show()

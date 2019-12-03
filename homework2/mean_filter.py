@@ -53,7 +53,7 @@ def harmonicMeanFilter(image, m=3, n=3):
 
 def inverseHarmonicMeanFilter(image, m=3, n=3, Q=0):
     height, width = image.shape
-    oldImage = paddingFilling(image, m, n)+0.0001
+    oldImage = paddingFilling(image, m, n) + 0.0001
     oldImages = []
     for i in range(m):
         for j in range(n):
@@ -66,9 +66,9 @@ def inverseHarmonicMeanFilter(image, m=3, n=3, Q=0):
 
 
 if __name__ == "__main__":
-    oldImage = Image.open("./test.png")
+    oldImage = Image.open("./lena1.png")
     oldImage.show()
     oldImage = np.asarray(oldImage)
-    newImage = harmonicMeanFilter(oldImage, 5, 5)
+    newImage = inverseHarmonicMeanFilter(oldImage, 3, 3,-1)
     newImage = Image.fromarray(newImage.astype("int"))
     newImage.show()

@@ -1,5 +1,6 @@
 from PIL import Image
 import numpy as np
+import time
 
 
 def paddingFilling(image, m=3, n=3):
@@ -28,20 +29,38 @@ def adaptiveFilter(image, m=3, n=3):
     globalVar = np.var(image)
     oldImages = imageSpliting(image, m=m, n=n)
     localMean = np.mean(oldImages, axis=0)
-    localVar = np.var(oldImages, axis=0) + 0.0001
+    localVar = np.var(oldImages, axis=0) + 0.000001
     newImage = image - (globalVar / localVar) * (image - localMean)
     return newImage
 
 
-def adaptiveMedianFilter(image, m=3, n=3):
-    oldImages = imageSpliting(image, m=m, n=n)
-    MEDIAN, MIN, MAX = np.median(oldImages, axis=0), np.min(oldImages, axis=0), np.max(oldImages, axis=0)
+def adaptiveMedianFilter(image, Smax=7):
+    height, width = image.shape
+    newImage = image.copy()
+    for i in range(height):
+        for j in range(width):
+            size = 3
+            z = image[i][j]
+            while (size <= Smax):
+                s = size // 2
+                tmp = image[max(0, i - s):i + s + 1, max(0, j - s):j + s + 1].reshape(-1)
+                tmp.sort()
+                zmin, zmax, zmed = tmp[0], tmp[-1], tmp[tmp.shape[0] // 2]
+                if zmin < zmed < zmax:
+                    if z == zmin or z == zmax:
+                        newImage[i][j] = zmed
+                    break
+                else:
+                    size += 2
+    return newImage
 
 
 if __name__ == "__main__":
-    oldImage = Image.open("./test.png")
+    oldImage = Image.open("./lena1.png")
     oldImage.show()
     oldImage = np.asarray(oldImage)
-    newImage = adaptiveFilter(oldImage, 3, 3)
+    begin = time.perf_counter()
+    newImage = adaptiveFilter(oldImage)
+    print(time.perf_counter() - begin)
     newImage = Image.fromarray(newImage.astype("int"))
     newImage.show()
