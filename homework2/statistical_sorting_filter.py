@@ -60,6 +60,6 @@ if __name__ == "__main__":
     oldImage = Image.open("./lena1.png")
     oldImage.show()
     oldImage = np.asarray(oldImage)
-    newImage = modifiedAlphaMeanFilter(oldImage, 3, 3, 6)
+    newImage = modifiedAlphaMeanFilter(oldImage)
     newImage = Image.fromarray(newImage.astype("int"))
     newImage.show()

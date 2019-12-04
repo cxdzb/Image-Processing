@@ -1,6 +1,5 @@
 from PIL import Image
 import numpy as np
-import time
 
 
 def paddingFilling(image, m=3, n=3):
@@ -59,8 +58,6 @@ if __name__ == "__main__":
     oldImage = Image.open("./lena1.png")
     oldImage.show()
     oldImage = np.asarray(oldImage)
-    begin = time.perf_counter()
     newImage = adaptiveFilter(oldImage)
-    print(time.perf_counter() - begin)
     newImage = Image.fromarray(newImage.astype("int"))
     newImage.show()
