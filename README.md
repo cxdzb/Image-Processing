@@ -1,3 +1,3 @@
-# [homework1](./homework1)
-# [homework2](./homework2)
-# [homework2](./homework3)
+# 1. [homework1](./homework1)
+# 2. [homework2](./homework2)
+# 3. [homework3](./homework3)
