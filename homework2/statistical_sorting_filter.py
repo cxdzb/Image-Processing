@@ -48,7 +48,7 @@ def medianRangeFilter(image, m=3, n=3):
     return newImage
 
 
-def modifiedAlphaMeanFilter(image, m=3, n=3, d=2):
+def modifiedAlphaMeanFilter(image, m=3, n=3, d=6):
     d = d // 2
     oldImages = imageSpliting(image, m=m, n=n)
     oldImages = np.sort(oldImages, axis=0)
@@ -57,9 +57,9 @@ def modifiedAlphaMeanFilter(image, m=3, n=3, d=2):
 
 
 if __name__ == "__main__":
-    oldImage = Image.open("./lena1.png")
+    oldImage = Image.open("./resource/lena_salt_pepper.png")
     oldImage.show()
-    oldImage = np.asarray(oldImage)
+    oldImage = np.asarray(oldImage, dtype=np.uint8)
     newImage = modifiedAlphaMeanFilter(oldImage)
-    newImage = Image.fromarray(newImage.astype("int"))
+    newImage = Image.fromarray(newImage.astype(np.uint8))
     newImage.show()

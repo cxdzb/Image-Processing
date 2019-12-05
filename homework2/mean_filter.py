@@ -55,10 +55,11 @@ def inverseHarmonicMeanFilter(image, m=3, n=3, Q=0):
     else:
         return np.sum(oldImages ** (Q + 1), axis=0) / np.sum(oldImages ** Q, axis=0)
 
+
 if __name__ == "__main__":
-    oldImage = Image.open("./lena1.png")
+    oldImage = Image.open("./resource/lena_salt_pepper.png")
     oldImage.show()
-    oldImage = np.asarray(oldImage)
-    newImage = inverseHarmonicMeanFilter(oldImage, Q=-1)
-    newImage = Image.fromarray(newImage.astype("int"))
+    oldImage = np.asarray(oldImage, dtype=np.uint8)
+    newImage = inverseHarmonicMeanFilter(oldImage, Q=0.5)
+    newImage = Image.fromarray(newImage.astype(np.uint8))
     newImage.show()

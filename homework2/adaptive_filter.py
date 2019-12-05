@@ -55,9 +55,9 @@ def adaptiveMedianFilter(image, Smax=7):
 
 
 if __name__ == "__main__":
-    oldImage = Image.open("./lena1.png")
+    oldImage = Image.open("./resource/lena_salt_pepper.png")
     oldImage.show()
-    oldImage = np.asarray(oldImage)
-    newImage = adaptiveFilter(oldImage)
-    newImage = Image.fromarray(newImage.astype("int"))
+    oldImage = np.asarray(oldImage, dtype=np.uint8)
+    newImage = adaptiveMedianFilter(oldImage)
+    newImage = Image.fromarray(newImage.astype(np.uint8))
     newImage.show()
