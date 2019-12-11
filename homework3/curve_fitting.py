@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from PIL import Image
+import os
+from skimage import io, transform
 from collections import Counter
 
 
@@ -31,7 +33,31 @@ def ransac(X, Y, iter=100, threshold=0.1):
     return bestArgs
 
 
-def houghTransform(X, Y):
+def houghTransform(X, Y, shape=(520, 520), thre=100):
+    def hough_line(img):
+        thetas = np.deg2rad(np.arange(-90.0, 90.0))
+        width, height = img.shape
+        diag_len = int(np.ceil(np.sqrt(width * width + height * height)))
+        rhos = np.linspace(-diag_len, diag_len, diag_len * 2)
+        cos_t, sin_t = np.cos(thetas), np.sin(thetas)
+        num_thetas = len(thetas)
+        accumulator = np.zeros((2 * diag_len, num_thetas), dtype=np.uint64)
+        y_idxs, x_idxs = np.nonzero(img)
+        for i in range(len(x_idxs)):
+            x = x_idxs[i]
+            y = y_idxs[i]
+            for t_idx in range(num_thetas):
+                rho = int(round(x * cos_t[t_idx] + y * sin_t[t_idx]) + diag_len)
+                accumulator[rho, t_idx] += 1
+        return accumulator, thetas, rhos
+
+    image = np.zeros(shape)
+    for i in range(Y.shape[0]):
+        image[int(X[i][0])][int(Y[i][0])] = 1
+    return hough_line(image)
+
+
+def simpleHoughTransform(X, Y):
     size = Y.shape[0]
     H = []
     for i in range(size):
@@ -72,26 +98,54 @@ def funcTest():
         plt.show()
 
     X, Y, dataRange = dataGenerator()
-    args = houghTransform(X, Y)
+    args = simpleHoughTransform(X, Y)
     curveDraw(dataRange, args, mode="polar")
 
 
 def imageTest():
-    image = Image.open("./resource/myPainting.png").convert("L")
-    image = np.array(image)
-    newImage = image.copy()
-    LoG = np.array([
-        [0, 0, -1, 0, 0],
-        [0, -1, -2, -1, 0],
-        [-1, -2, 16, -2, -1],
-        [0, -1, -2, -1, 0],
-        [0, 0, -1, 0, 0],
-    ])
-    for i in range(2,518):
-        for j in range(2, 518):
-            newImage[i][j] = np.sum(LoG*image[i-2:i+3,j-2:j+3])
-    newImage = Image.fromarray(newImage)
-    newImage.show()
+    def dataGenerator():
+        image = Image.open("./resource/myPainting.png").convert("L")
+        image = np.array(image)
+        newImage = image.copy()
+        LoG = np.array([
+            [0, 0, -1, 0, 0],
+            [0, -1, -2, -1, 0],
+            [-1, -2, 16, -2, -1],
+            [0, -1, -2, -1, 0],
+            [0, 0, -1, 0, 0],
+        ])
+        data = [[], []]
+        for i in range(2, 518):
+            for j in range(2, 518):
+                log = np.sum(LoG * image[i - 2:i + 3, j - 2:j + 3])
+                newImage[i][j] = 0 if log < 127 else 255
+                if newImage[i][j] == 255:
+                    data[0].append(i)
+                    data[1].append(j)
+        # newImage = Image.fromarray(newImage)
+        # newImage.save("./result/myPainting1.png")
+        data = np.array(data).T
+        X, Y = np.hstack([data[:, [0]], np.ones((data.shape[0], 1))]), data[:, [1]]
+        return X, Y, newImage
+
+    def curveDraw(image, accumulator, thetas, rhos, threshold, path="./result/houghTransform2.png"):
+        io.imshow(image)
+        row, col = image.shape
+        for _, angle, dist in zip(*transform.hough_line_peaks(accumulator, thetas, rhos, threshold=threshold)):
+            if angle == 0:
+                x = dist
+                plt.plot((x, x), (0, row), '-c')
+                continue
+            y0 = (dist - 0 * np.cos(angle)) / np.sin(angle)
+            y1 = (dist - col * np.cos(angle)) / np.sin(angle)
+            plt.plot((0, col), (y0, y1), '-c')
+        plt.axis((0, col, row, 0))
+        plt.savefig(path)
+        plt.close()
+
+    X, Y, newImage = dataGenerator()
+    accumulator, thetas, rhos = houghTransform(X, Y)
+    curveDraw(newImage, accumulator, thetas, rhos, threshold=100)
 
 
 if __name__ == "__main__":
