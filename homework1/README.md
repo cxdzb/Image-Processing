@@ -45,4 +45,8 @@ if __name__ == "__main__":
 
 ## 2. 不使用for的双线性插值
 
-普通的双线性插值，详情见[博客](https://github.com/3017218062/Image-Super-Resolution/tree/master/interpolation)。
+将目标图像上的每个点周围的四个邻点对应的坐标分别用矩阵表示，再用双线性插值公式进行计算。效果如下：
+
+![](result/lena_bilinear.png)
+
+详情见[博客](https://github.com/3017218062/Image-Super-Resolution/tree/master/interpolation)。
