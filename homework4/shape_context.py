@@ -1,6 +1,6 @@
 from PIL import Image
 import numpy as np
-import math, random
+import math
 
 LoG = np.array([
     [0, 0, -1, 0, 0],
@@ -9,7 +9,7 @@ LoG = np.array([
     [0, -1, -2, -1, 0],
     [0, 0, -1, 0, 0],
 ])
-num, inf = 10, np.inf
+num, inf = 100, np.inf
 linker, slack = np.zeros((num), dtype=np.int32), np.zeros((num))
 lx, ly = np.zeros((num)), np.zeros((num))
 visx, visy = np.zeros((num), dtype=np.int8), np.zeros((num), dtype=np.int8)
@@ -77,7 +77,7 @@ def getEdge(image):
     return edge
 
 
-def getShapeContext(points, N=5, M=12, interval=5):
+def getShapeContext(points, N=5, M=12):
     minDegree = math.pi * 2 / M
     shapeContexts = []
     for i in range(num):
@@ -87,7 +87,7 @@ def getShapeContext(points, N=5, M=12, interval=5):
             x, y = points[j][0] - points[i][0], points[j][1] - points[i][1]
             dist = math.hypot(x, y)
             theta = math.atan2(x, y)
-            x, y = int(math.log(dist)), int((theta - 1e-6 + math.pi) / minDegree)
+            x, y = int(math.log(dist)), int((theta - 1e-9 + math.pi) / minDegree)
             if x <= N - 1:
                 shapeContext[x][y] += 1
         shapeContexts.append(shapeContext)
